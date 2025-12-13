@@ -1,6 +1,8 @@
 ﻿using Archipelago;
+using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
+using HunieCamStudioArchipelagoClient.Hunie_Cam_Studio;
 using HunieCamStudioArchipelagoClient.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -10,6 +12,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using UnityEngine;
+using static System.Collections.Specialized.BitVector32;
 
 namespace HunieCamStudioArchipelagoClient.Archipelago
 {
@@ -20,8 +24,8 @@ namespace HunieCamStudioArchipelagoClient.Archipelago
     {
 
         public const int apworldmajor = 0;
-        public const int apworldminor = 1;
-        public const int apworldbuild = 0;
+        public const int apworldminor = 2;
+        public const int apworldbuild = 1;
 
         public RoomInfoPacket room;
         public DataPackagePacket data;
@@ -32,7 +36,7 @@ namespace HunieCamStudioArchipelagoClient.Archipelago
         public string error = null;
 
         public const string APVersion = "0.5.0";
-        public const string Game = "Hunie Cam Studio";
+        public const string game = "Hunie Cam Studio";
 
         public string url;
         public string username;
@@ -93,7 +97,7 @@ namespace HunieCamStudioArchipelagoClient.Archipelago
         public void sendConnectPacket()
         {
             if (helper.readyWS(ws) != 3) { return; }
-            string pack = "{\"cmd\":\"Connect\",\"game\":\"" + Game + "\",\"name\":\"" + username + "\",\"password\":\"" + password + "\",\"uuid\":\"" + Guid.NewGuid().ToString() + "\",\"version\":{\"major\":0,\"minor\":5,\"build\":1,\"class\":\"Version\"},\"tags\":[\"AP\"],\"items_handling\":7,\"slot_data\":true}";
+            string pack = "{\"cmd\":\"Connect\",\"game\":\"" + game + "\",\"name\":\"" + username + "\",\"password\":\"" + password + "\",\"uuid\":\"" + Guid.NewGuid().ToString() + "\",\"version\":{\"major\":0,\"minor\":5,\"build\":1,\"class\":\"Version\"},\"tags\":[\"AP\"],\"items_handling\":7,\"slot_data\":true}";
             helper.sendWS(ws, pack);
         }
 
@@ -147,7 +151,7 @@ namespace HunieCamStudioArchipelagoClient.Archipelago
                 cmd = (string)msgjson["cmd"];
             }
 
-            ArchipelagoConsole.LogDebug("MESSAGE GOTTEN\n" + msg);
+            //ArchipelagoConsole.LogDebug("MESSAGE GOTTEN\n" + msg);
             if (cmd == "RoomInfo")
             {
                 HunieCamArchipelago.BepinLogger.LogMessage("RoomInfo PACKET GOTTEN");
@@ -172,6 +176,43 @@ namespace HunieCamStudioArchipelagoClient.Archipelago
                 {
                     ArchipelagoConsole.LogError($"APWORLD VERSION ERROR\nEXPECTED: V{apworldmajor}.{apworldminor}.{apworldbuild} GOT V{wv.major}.{wv.minor}.{wv.build}");
                 }
+
+
+                ArchipelagoConsole.LogDebug($"slot forcegoal = {Convert.ToBoolean(msgjson["slot_data"]["force_goal"])}");
+                ArchipelagoConsole.LogDebug($"slot goal = {Convert.ToBoolean(msgjson["slot_data"]["force_goal"])}");
+
+                //TODO FIX
+                //if (Convert.ToInt32(msgjson["slot_data"]["shop_items"]) > 0)
+                //{
+                //    ArchipelagoConsole.LogDebug($"slot has {Convert.ToInt32(msgjson["slot_data"]["shop_items"])} shop locations");
+                //    List<long> shopid = new List<long>();
+                //    for (int i = 0; i < Convert.ToInt32(msgjson["slot_data"]["shop_items"]); i++)
+                //    {
+                //        shopid.Add(Convert.ToInt32(msgjson["slot_data"]["shop_loc_start"]) + i + 1);
+                //    }
+                //    session.Locations.ScoutLocationsAsync((x) => ArchipelagoData.shopdata = x, HintCreationPolicy.None, shopid.ToArray());
+                //}
+
+
+                Dictionary<string, List<int>> data = JsonConvert.DeserializeObject<Dictionary<string, List<int>>>(msgjson["slot_data"]["girldata"].ToString());
+                ArchipelagoData.enabledgirls = JsonConvert.DeserializeObject<List<string>>(msgjson["slot_data"]["enabled_girls"].ToString());
+                HunieCamArchipelago.temp = data;
+
+                foreach (var g in Game.Data.Girls.GetAll())
+                {
+                    if (ArchipelagoData.girldata == null) { ArchipelagoData.girldata = new Dictionary<int, GirlDefinition>(); }
+                    List<int> t = data[g.girlName];
+                    g.startStyleLevel = 1;
+                    g.startTalentLevel = 1;
+                    g.holdUntilEmployeeCount = 0;
+                    g.smokes = (GirlSmokesType)t[0];
+                    g.drinks = (GirlDrinksType)t[1];
+                    g.fetishes.Clear();
+                    g.fetishes.Add(Game.Data.Fetishes.Get(t[2]));
+                    g.fetishes.Add(Game.Data.Fetishes.Get(t[3]));
+                    ArchipelagoData.girldata.Add(g.id, g);
+                }
+                Game.Data.Girls.GetAll();
 
                 HunieCamArchipelago.curse.recievedconnectedpacket = true;
 

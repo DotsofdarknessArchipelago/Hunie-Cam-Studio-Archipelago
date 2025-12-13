@@ -9,8 +9,8 @@ class HuniePop(World):
     game = "Hunie Cam Studio"
     worldversion = {
         "major": 0,
-        "minor": 1,
-        "build": 0
+        "minor": 2,
+        "build": 1
     }
 
     item_name_to_id = item_table
@@ -59,7 +59,7 @@ class HuniePop(World):
 
 
         self.totalite += len(self.options.enabled_girls.value) - 1
-        self.totalite += (71 - (self.options.start_slots.value-1) - self.options.start_slots.value)
+        self.totalite += (71 - (self.options.start_slots.value-1) - self.options.item_slots.value)
 
 
         if self.totalloc > self.totalite:
@@ -192,9 +192,9 @@ class HuniePop(World):
 
         for k in upgrade_item_count:
             if k=="Progressive Staffing Upgrade":
-                for i in range(upgrade_item_count["Progressive Staffing Upgrade"]-self.options.start_slots.value-1):
+                for i in range(upgrade_item_count["Progressive Staffing Upgrade"]-(self.options.start_slots.value-1)):
                     self.multiworld.itempool.append(self.create_item(k))
-            elif k=="Progressive Staffing Upgrade":
+            elif k=="Progressive Inventory Upgrade":
                 for i in range(upgrade_item_count["Progressive Inventory Upgrade"]-self.options.item_slots.value):
                     self.multiworld.itempool.append(self.create_item(k))
             else:

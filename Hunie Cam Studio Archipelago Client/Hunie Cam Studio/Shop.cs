@@ -44,7 +44,8 @@ namespace HunieCamStudioArchipelagoClient.Hunie_Cam_Studio
                     def.id = (int)l[0];
                     def.accessoryName = $"Archipelago Item #{l[0] - Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["shop_loc_start"])}";
                     def.name = $"Archipelago Item #{l[0] - Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["shop_loc_start"])}";
-                    def.description = $"buy to send {ArchipelagoData.shopdata[l[0]].Player.Name} an item in {ArchipelagoData.shopdata[l[0]].Player.Game}";
+                    //def.description = $"buy to send {ArchipelagoData.shopdata[l[0]].Player.Name} an item in {ArchipelagoData.shopdata[l[0]].Player.Game}";
+                    def.description = $"buy to send an item to another player";
                     ____storeAccessories[i] = def;
                 }
             }

@@ -22,12 +22,12 @@ namespace HunieCamStudioArchipelagoClient.Hunie_Cam_Studio
                     NetworkItem item = CursedArchipelagoClient.items[ArchipelagoData.Index];
                     if (Game.Manager.Player.accessories.Count > 9)
                     {
-                        ArchipelagoConsole.LogMessage($"inventory too full for {HunieCamArchipelago.curse.data.data.games[CursedArchipelagoClient.Game].idtoitem[Convert.ToInt32(item.item)]} giving money instead");
+                        ArchipelagoConsole.LogMessage($"inventory too full for {HunieCamArchipelago.curse.data.data.games[CursedArchipelagoClient.game].idtoitem[Convert.ToInt32(item.item)]} giving money instead");
                         Game.Manager.Player.cash += 100;
                     }
                     else
                     {
-                        ArchipelagoConsole.LogMessage($"Adding {HunieCamArchipelago.curse.data.data.games[CursedArchipelagoClient.Game].idtoitem[Convert.ToInt32(item.item)]} to Inventory");
+                        ArchipelagoConsole.LogMessage($"Adding {HunieCamArchipelago.curse.data.data.games[CursedArchipelagoClient.game].idtoitem[Convert.ToInt32(item.item)]} to Inventory");
                         Game.Manager.Player.AddAccessory(Game.Data.Accessories.Get(itemtoid(item.item)));
                     }
                 }
