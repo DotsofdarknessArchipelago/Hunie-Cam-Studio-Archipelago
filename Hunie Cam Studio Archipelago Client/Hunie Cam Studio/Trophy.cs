@@ -2,6 +2,7 @@
 using Archipelago.MultiClient.Net.Enums;
 using HarmonyLib;
 using HunieCamStudioArchipelagoClient.Archipelago;
+using HunieCamStudioArchipelagoClient.Utils;
 using System;
 
 namespace HunieCamStudioArchipelagoClient.Hunie_Cam_Studio
@@ -13,11 +14,11 @@ namespace HunieCamStudioArchipelagoClient.Hunie_Cam_Studio
         [HarmonyPostfix]
         public static void trophy(TrophyDefinition __result)
         {
-            ArchipelagoClient.session.DataStorage[Scope.Slot, "complete"] = true;
+            Codes.dayreached = true;
 
-            if (__result == null && Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["goal"])) { return; }
+            if (__result == null && Convert.ToBoolean(HunieCamArchipelago.curse.connected.slot_data["goal"])) { return; }
 
-            if (!Convert.ToBoolean(ArchipelagoClient.ServerData.slotData["goal"]))
+            if (!Convert.ToBoolean(HunieCamArchipelago.curse.connected.slot_data["goal"]))
             {
                 bool b = true;
                 ArchipelagoConsole.LogMessage($"checking talent/style level of enabled girls");
@@ -37,19 +38,19 @@ namespace HunieCamStudioArchipelagoClient.Hunie_Cam_Studio
                 }
                 if (b)
                 {
-                    ArchipelagoClient.sendloc(1);
+                    HunieCamArchipelago.curse.sendLoc(1);
                 }
             }
 
-            ArchipelagoClient.sendloc(Convert.ToInt32(ArchipelagoClient.ServerData.slotData["trophy_loc_start"]) + 1);
+            HunieCamArchipelago.curse.sendLoc(Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["trophy_loc_start"]) + 1);
             if (__result.trophyName == "Bronze") { return; }
-            ArchipelagoClient.sendloc(Convert.ToInt32(ArchipelagoClient.ServerData.slotData["trophy_loc_start"]) + 2);
+            HunieCamArchipelago.curse.sendLoc(Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["trophy_loc_start"]) + 2);
             if (__result.trophyName == "Silver") { return; }
-            ArchipelagoClient.sendloc(Convert.ToInt32(ArchipelagoClient.ServerData.slotData["trophy_loc_start"]) + 3);
+            HunieCamArchipelago.curse.sendLoc(Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["trophy_loc_start"]) + 3);
             if (__result.trophyName == "Gold") { return; }
-            ArchipelagoClient.sendloc(Convert.ToInt32(ArchipelagoClient.ServerData.slotData["trophy_loc_start"]) + 4);
+            HunieCamArchipelago.curse.sendLoc(Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["trophy_loc_start"]) + 4);
             if (__result.trophyName == "Platinum") { return; }
-            ArchipelagoClient.sendloc(Convert.ToInt32(ArchipelagoClient.ServerData.slotData["trophy_loc_start"]) + 5);
+            HunieCamArchipelago.curse.sendLoc(Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["trophy_loc_start"]) + 5);
             if (__result.trophyName == "Diamond") { return; }
         }
     }

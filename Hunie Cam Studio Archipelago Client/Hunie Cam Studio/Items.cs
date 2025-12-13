@@ -1,6 +1,4 @@
 ﻿using Archipelago;
-using Archipelago.MultiClient.Net.Enums;
-using Archipelago.MultiClient.Net.Models;
 using HarmonyLib;
 using HunieCamStudioArchipelagoClient.Archipelago;
 using System;
@@ -16,33 +14,33 @@ namespace HunieCamStudioArchipelagoClient.Hunie_Cam_Studio
         public static void processitems()
         {
             bool t = true;
-            while (ArchipelagoData.Index < ArchipelagoClient.session.Items.AllItemsReceived.Count)
+            while (ArchipelagoData.Index < CursedArchipelagoClient.items.Count)
             {
                 if (t) { t = false; ArchipelagoConsole.LogMessage("Processing Items"); }
-                if (ArchipelagoClient.session.Items.AllItemsReceived[ArchipelagoData.Index].ItemId > Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_start"]))
+                if (CursedArchipelagoClient.items[ArchipelagoData.Index].item > Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["items_start"]))
                 {
-                    ItemInfo item = ArchipelagoClient.session.Items.AllItemsReceived[ArchipelagoData.Index];
+                    NetworkItem item = CursedArchipelagoClient.items[ArchipelagoData.Index];
                     if (Game.Manager.Player.accessories.Count > 9)
                     {
-                        ArchipelagoConsole.LogMessage($"inventory too full for {item.ItemName} giving money instead");
+                        ArchipelagoConsole.LogMessage($"inventory too full for {HunieCamArchipelago.curse.data.data.games[CursedArchipelagoClient.Game].idtoitem[Convert.ToInt32(item.item)]} giving money instead");
                         Game.Manager.Player.cash += 100;
                     }
                     else
                     {
-                        ArchipelagoConsole.LogMessage($"Adding {item.ItemName} to Inventory");
-                        Game.Manager.Player.AddAccessory(Game.Data.Accessories.Get(itemtoid(item.ItemId)));
+                        ArchipelagoConsole.LogMessage($"Adding {HunieCamArchipelago.curse.data.data.games[CursedArchipelagoClient.Game].idtoitem[Convert.ToInt32(item.item)]} to Inventory");
+                        Game.Manager.Player.AddAccessory(Game.Data.Accessories.Get(itemtoid(item.item)));
                     }
                 }
 
                 ArchipelagoData.Index++;
             }
-            ArchipelagoClient.session.DataStorage[Scope.Slot, "index"] = ArchipelagoData.Index;
+            //ArchipelagoClient.session.DataStorage[Scope.Slot, "index"] = ArchipelagoData.Index;
             if (!t && Game.Manager.Player.upgrades != null) { }
         }
 
         public static int itemtoid(long id)
         {
-            int item = Convert.ToInt32(ArchipelagoClient.ServerData.slotData["items_start"]);
+            int item = Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["items_start"]);
             switch (id-item)
             {
                 case 1: return 2;//"Vibrator"

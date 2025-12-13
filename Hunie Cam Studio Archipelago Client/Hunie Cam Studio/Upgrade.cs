@@ -22,9 +22,9 @@ namespace HunieCamStudioArchipelagoClient.Hunie_Cam_Studio
             {
                 o.Add(all[i], 0);
             }
-            foreach (var item in ArchipelagoClient.session.Items.AllItemsReceived)
+            foreach (var item in CursedArchipelagoClient.items)
             {
-                switch (item.ItemId - Convert.ToInt32(ArchipelagoClient.ServerData.slotData["upgrade_item_start"]))
+                switch (item.item - Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["upgrade_item_start"]))
                 {
                     case 1:
                         o[Game.Data.Upgrades.Get(1)]++;
@@ -80,9 +80,9 @@ namespace HunieCamStudioArchipelagoClient.Hunie_Cam_Studio
         {
             if (upgradeDef == null) return;
             int lv = 0;
-            foreach (var item in ArchipelagoClient.session.Items.AllItemsReceived)
+            foreach (var item in CursedArchipelagoClient.items)
             {
-                if (item.ItemId == Convert.ToInt32(ArchipelagoClient.ServerData.slotData["upgrade_item_start"]) + upgradeDef.id)
+                if (item.item == Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["upgrade_item_start"]) + upgradeDef.id)
                 {
                     lv++;
                 }

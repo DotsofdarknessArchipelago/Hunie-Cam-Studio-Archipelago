@@ -80,12 +80,12 @@ public static class ArchipelagoConsole
         //}
 
         // draw client/server commands entry
-        if (Hidden || !ArchipelagoClient.Authenticated) return;
+        if (Hidden || !HunieCamArchipelago.curse.fullconnection) return;
 
         CommandText = GUI.TextField(CommandTextRect, CommandText);
         if (!CommandText.IsNullOrWhiteSpace() && GUI.Button(SendCommandButton, "Send"))
         {
-            HunieCamArchipelago.ArchipelagoClient.SendMessage(CommandText);
+            HunieCamArchipelago.curse.sendSay(CommandText);
             CommandText = "";
         }
     }
@@ -131,7 +131,7 @@ public static class ArchipelagoConsole
         else
         {
             height = (int)(Screen.height * 0.3f);
-            scrollDepth = height * 10;
+            scrollDepth = height * 8;
         }
 
         window = new Rect(Screen.width / 2 - width / 2, 0, width, height);
