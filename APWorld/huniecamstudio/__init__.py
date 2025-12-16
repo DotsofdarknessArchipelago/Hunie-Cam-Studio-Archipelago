@@ -9,8 +9,8 @@ class HuniePop(World):
     game = "Hunie Cam Studio"
     worldversion = {
         "major": 0,
-        "minor": 2,
-        "build": 1
+        "minor": 3,
+        "build": 0
     }
 
     item_name_to_id = item_table
@@ -436,6 +436,7 @@ class HuniePop(World):
             "shop_items": self.options.shop_items.value,
             "goal": self.options.goal.value,
             "force_goal": self.options.force_goal.value,
+            "min_trophy": self.options.min_trophy.value,
 
             "world_version": self.worldversion,
         }

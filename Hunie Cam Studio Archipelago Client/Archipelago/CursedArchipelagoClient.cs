@@ -24,8 +24,8 @@ namespace HunieCamStudioArchipelagoClient.Archipelago
     {
 
         public const int apworldmajor = 0;
-        public const int apworldminor = 2;
-        public const int apworldbuild = 1;
+        public const int apworldminor = 3;
+        public const int apworldbuild = 0;
 
         public RoomInfoPacket room;
         public DataPackagePacket data;

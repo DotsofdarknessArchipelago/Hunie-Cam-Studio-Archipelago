@@ -20,7 +20,7 @@ public class HunieCamArchipelago : BaseUnityPlugin
 {
     public const string PluginGUID = "com.yourName.projectName";
     public const string PluginName = "Hunie Cam Studio Archipelago Client";
-    public const string PluginVersion = "0.2.1";
+    public const string PluginVersion = "0.3.0";
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     public static ManualLogSource BepinLogger;

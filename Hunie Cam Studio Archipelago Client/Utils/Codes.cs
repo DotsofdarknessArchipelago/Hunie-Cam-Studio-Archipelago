@@ -31,7 +31,7 @@ namespace HunieCamStudioArchipelagoClient.Utils
                             return;
                         }
 
-                        if (dayreached)
+                        if (!dayreached)
                         {
                             ArchipelagoConsole.LogMessage("you must succesfully reach day 22 (in current client session) before you can recheck goal");
                             return;

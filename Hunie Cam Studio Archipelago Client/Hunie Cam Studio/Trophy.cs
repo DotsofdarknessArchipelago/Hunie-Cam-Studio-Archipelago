@@ -39,18 +39,24 @@ namespace HunieCamStudioArchipelagoClient.Hunie_Cam_Studio
                 if (b)
                 {
                     HunieCamArchipelago.curse.sendLoc(1);
+                    HunieCamArchipelago.curse.sendCompletion();
                 }
             }
 
             HunieCamArchipelago.curse.sendLoc(Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["trophy_loc_start"]) + 1);
+            if (Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["min_trophy"]) == 0) { HunieCamArchipelago.curse.sendCompletion(); }
             if (__result.trophyName == "Bronze") { return; }
             HunieCamArchipelago.curse.sendLoc(Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["trophy_loc_start"]) + 2);
+            if (Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["min_trophy"]) == 1) { HunieCamArchipelago.curse.sendCompletion(); }
             if (__result.trophyName == "Silver") { return; }
             HunieCamArchipelago.curse.sendLoc(Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["trophy_loc_start"]) + 3);
+            if (Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["min_trophy"]) == 2) { HunieCamArchipelago.curse.sendCompletion(); }
             if (__result.trophyName == "Gold") { return; }
             HunieCamArchipelago.curse.sendLoc(Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["trophy_loc_start"]) + 4);
+            if (Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["min_trophy"]) == 3) { HunieCamArchipelago.curse.sendCompletion(); }
             if (__result.trophyName == "Platinum") { return; }
             HunieCamArchipelago.curse.sendLoc(Convert.ToInt32(HunieCamArchipelago.curse.connected.slot_data["trophy_loc_start"]) + 5);
+            HunieCamArchipelago.curse.sendCompletion();
             if (__result.trophyName == "Diamond") { return; }
         }
     }
