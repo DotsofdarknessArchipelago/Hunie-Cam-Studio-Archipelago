@@ -4,6 +4,7 @@ using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using HunieCamStudioArchipelagoClient.Archipelago;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +21,7 @@ public class HunieCamArchipelago : BaseUnityPlugin
 {
     public const string PluginGUID = "com.yourName.projectName";
     public const string PluginName = "Hunie Cam Studio Archipelago Client";
-    public const string PluginVersion = "0.3.0";
+    public const string PluginVersion = "0.3.1";
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     public static ManualLogSource BepinLogger;
@@ -91,7 +92,7 @@ public class HunieCamArchipelago : BaseUnityPlugin
                 else { ArchipelagoConsole.LogMessage("DotsWebsocket Not Correct Version\nplease update your client"); }
 
             }
-            catch (Exception e)
+            catch
             {
                 ArchipelagoConsole.LogError("FATAL ERROR: DotsWebSocket.dll not able to be accessed");
                 ArchipelagoConsole.LogError("DotsWebSocket.dll exists but errored on client.");
@@ -198,6 +199,9 @@ public class HunieCamArchipelago : BaseUnityPlugin
         GUI.Box(boxRect, "", new GUIStyle { normal = new GUIStyleState { background = SolidBoxTex } });
     }
 
+
+    bool logstate = true;
+
     public void archwindow(int id)
     {
 
@@ -207,11 +211,30 @@ public class HunieCamArchipelago : BaseUnityPlugin
             float loc = 0;
             float item = 0;
             bool b = true;
-            if (!CursedArchipelagoClient.newconn)
+            bool seed = false;
+
+            if (File.Exists(Application.persistentDataPath + $"/archdata.json"))
             {
+                if (logstate) BepinLogger.LogMessage("archdata json found");
+                using (StreamReader file = File.OpenText(Application.persistentDataPath + $"/archdata.json"))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    Dictionary<string, string> savedlist = (Dictionary<string, string>)serializer.Deserialize(file, typeof(Dictionary<string, string>));
+                    if (savedlist != null && savedlist["seed"] == curse.room.seed_name)
+                    {
+                        if (logstate) BepinLogger.LogMessage("archdata json seed match");
+                        seed = true;
+                    }                    
+                }
+            }
+
+            if (!CursedArchipelagoClient.newconn || seed)
+            {
+                if (logstate) BepinLogger.LogMessage("previous game allowed");
                 state = "GAME STARTED";
                 if (Game.Persistence.saveData.saveFiles[0].complete && !Game.Persistence.saveData.saveFiles[0].success)
                 {
+                    if (logstate) BepinLogger.LogMessage("save file found but eneded in defeat");
                     state = "NEW GAME";
                     b = false;
                 }
@@ -248,7 +271,7 @@ public class HunieCamArchipelago : BaseUnityPlugin
             GUI.Label(new Rect(10, 200, 375, 40), $"ITEMS RECIEVED:", mlabel3);
             GUI.Label(new Rect(10, 230, 375, 40), $"{item:G4}", mlabel3);
 
-            if (!CursedArchipelagoClient.newconn && b)
+            if ((!CursedArchipelagoClient.newconn || seed) && b)
             {
                 if (GUI.Button(new Rect(10, 300, 150, 60), "Start Again", mbutton))
                 {
@@ -263,10 +286,10 @@ public class HunieCamArchipelago : BaseUnityPlugin
             {
                 if (GUI.Button(new Rect(118, 300, 150, 60), "Start Game", mbutton))
                 {
-                    CursedArchipelagoClient.newconn = false;
                     startarch(true);
                 }
             }
+            logstate = false;
         }
         else if (tringtoconnect)
         {
@@ -346,11 +369,18 @@ public class HunieCamArchipelago : BaseUnityPlugin
     public static void startarch(bool newgame)
     {
         awin = false;
+        CursedArchipelagoClient.newconn = false;
         if (newgame)
         {
             Game.Persistence.saveData.saveFiles[0].ResetFile();
             ArchipelagoData.Index = 0;
         }
+
+        using (StreamWriter archfile = File.CreateText(Application.persistentDataPath + $"/archdata.json"))
+        {
+            archfile.WriteLine($"{{seed:{curse.room.seed_name}}}");
+        }
+
         Game.Persistence.activeSaveFileIndex = 0;
         UiLoadingOverlay component = GameObject.Find("LoadingOverlay").GetComponent<UiLoadingOverlay>();
         component.LoadNextScene(true);
