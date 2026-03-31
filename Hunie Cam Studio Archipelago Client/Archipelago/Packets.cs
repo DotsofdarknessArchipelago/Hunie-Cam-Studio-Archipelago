@@ -158,6 +158,16 @@ namespace HunieCamStudioArchipelagoClient.Archipelago
         public int minor = 0;
         public int build = 0;
         public string Class;
+
+        public static NetworkVersion gen(List<int> arr)
+        {
+            return new NetworkVersion
+            {
+                major = arr[0],
+                minor = arr[1],
+                build = arr[2]
+            };
+        }
     }
     public class NetworkPlayer
     {

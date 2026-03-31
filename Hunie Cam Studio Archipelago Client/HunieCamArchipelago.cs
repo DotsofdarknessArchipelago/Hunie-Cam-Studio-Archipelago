@@ -21,7 +21,7 @@ public class HunieCamArchipelago : BaseUnityPlugin
 {
     public const string PluginGUID = "com.yourName.projectName";
     public const string PluginName = "Hunie Cam Studio Archipelago Client";
-    public const string PluginVersion = "0.3.1";
+    public const string PluginVersion = "0.3.2";
 
     public const string ModDisplayInfo = $"{PluginName} v{PluginVersion}";
     public static ManualLogSource BepinLogger;
@@ -207,6 +207,7 @@ public class HunieCamArchipelago : BaseUnityPlugin
 
         if (curse.fullconnection)
         {
+            if (logstate) BepinLogger.LogMessage("FULL CONNECTION LOGGING");
             string state = "";
             float loc = 0;
             float item = 0;
@@ -220,11 +221,23 @@ public class HunieCamArchipelago : BaseUnityPlugin
                 {
                     JsonSerializer serializer = new JsonSerializer();
                     Dictionary<string, string> savedlist = (Dictionary<string, string>)serializer.Deserialize(file, typeof(Dictionary<string, string>));
-                    if (savedlist != null && savedlist["seed"] == curse.room.seed_name)
+                    if (savedlist != null)
                     {
-                        if (logstate) BepinLogger.LogMessage("archdata json seed match");
-                        seed = true;
-                    }                    
+                        if (logstate) BepinLogger.LogMessage($"saved seed: {savedlist["seed"]}");
+                        if (savedlist["seed"] == curse.room.seed_name)
+                        {
+                            if (logstate) BepinLogger.LogMessage("archdata json seed match");
+                            seed = true;
+                        }
+                        else
+                        {
+                            if (logstate) BepinLogger.LogMessage("archdata json seed DOSENT match");
+                        }
+                    }
+                    else
+                    {
+                        if (logstate) BepinLogger.LogMessage("ERROR PASING ARCHDATA JSON");
+                    }
                 }
             }
 
@@ -378,7 +391,7 @@ public class HunieCamArchipelago : BaseUnityPlugin
 
         using (StreamWriter archfile = File.CreateText(Application.persistentDataPath + $"/archdata.json"))
         {
-            archfile.WriteLine($"{{seed:{curse.room.seed_name}}}");
+            archfile.WriteLine($"{{seed:\"{curse.room.seed_name}\"}}");
         }
 
         Game.Persistence.activeSaveFileIndex = 0;

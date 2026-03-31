@@ -25,7 +25,7 @@ namespace HunieCamStudioArchipelagoClient.Archipelago
 
         public const int apworldmajor = 0;
         public const int apworldminor = 3;
-        public const int apworldbuild = 1;
+        public const int apworldbuild = 2;
 
         public RoomInfoPacket room;
         public DataPackagePacket data;
@@ -169,8 +169,9 @@ namespace HunieCamStudioArchipelagoClient.Archipelago
             {
                 HunieCamArchipelago.BepinLogger.LogMessage("Connected PACKET GOTTEN");
                 HunieCamArchipelago.BepinLogger.LogMessage(msg);
-                HunieCamArchipelago.curse.connected = JsonConvert.DeserializeObject<ConnectedPacket>(msg);
+                HunieCamArchipelago.curse.connected = JsonConvert.DeserializeObject<ConnectedPacket>(msg); 
                 NetworkVersion wv = JsonConvert.DeserializeObject<NetworkVersion>(msgjson["slot_data"]["world_version"].ToString());
+                //NetworkVersion wv = NetworkVersion.gen(JsonConvert.DeserializeObject<List<int>>(msgjson["slot_data"]["world_version"].ToString()));
                 HunieCamArchipelago.curse.worldver = wv;
                 if (wv.major != apworldmajor && wv.minor != apworldminor && wv.build != apworldbuild)
                 {

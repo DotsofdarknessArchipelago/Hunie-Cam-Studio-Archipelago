@@ -10,7 +10,7 @@ class HuniePop(World):
     worldversion = {
         "major": 0,
         "minor": 3,
-        "build": 0
+        "build": 2
     }
 
     item_name_to_id = item_table
